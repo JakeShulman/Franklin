@@ -1,0 +1,21 @@
+// change the theme
+$theme-colors: (
+  "primary": #228D57,
+  "light": #FFFFFF,
+  "highlight": #88bb65,
+  "dark": #3e3e3c,
+  "danger": #FF5252
+);
+.navbar {
+    -webkit-box-shadow: 0 8px 6px -6px #999;
+    -moz-box-shadow: 0 8px 6px -6px #999;
+    box-shadow: 0 8px 6px -6px #999;
+
+    /* the rest of your styling */
+}
+.navbar-brand{
+  padding-left: 20px;
+}
+
+// Import Bootstrap and its default variables
+@import '~bootstrap/scss/bootstrap.scss';
