@@ -27,20 +27,20 @@ const Navigation = () => {
 
   <br />
   <Navbar bg="light" fixed="top" variant="light">
-    <Navbar.Brand href="/"><strong>Frankly Writing</strong></Navbar.Brand>
+    <Navbar.Brand style= {{paddingRight:'20px'}}href="/"><strong>Frankly Writing</strong></Navbar.Brand>
     <Nav className="me-auto">
-      {/* <Nav.Link href="#home">Home</Nav.Link> */}
-      {/* <Nav.Link href="#features">Features</Nav.Link> */}
+      <Nav.Link href="#features">
+      <div className = 'navbarlink' style={{color: 'black', fontSize:'18px'}}>How it Works</div>     
+      </Nav.Link>
     </Nav>
-      <Nav.Link href="/signup">
-      <Button href='/signup' style= {{backgroundColor: '#228D57'}}> 
-      <div style={{color: 'white'}}>Sign up</div>     
-       </Button> 
+
+    <Nav.Link href="/login">
+      <div className = 'navbarlink' style={{color: 'black', fontWeight:'700', fontSize:'18px'}}>Log in </div>     
     </Nav.Link>
 
-    <Nav.Link  style = {{paddingRight: '30px'}}href="/login">
-      <Button style= {{backgroundColor: 'white'}}> 
-      <div style={{color: '#228D57'}}>Log in </div>     
+      <Nav.Link href="/signup" style = {{ paddingRight: '30px'}}>
+      <Button  className='signup' href='/signup' > 
+      <div style={{color: 'black', fontWeight:'700', fontSize:'18px'}}>Sign up</div>     
        </Button> 
     </Nav.Link>
   </Navbar>

@@ -17,5 +17,20 @@ $theme-colors: (
   padding-left: 20px;
 }
 
+
+.navbarlink:hover{
+  color: #88bb65 !important;
+}
+
+.signup{
+  background-color: #88bb65 !important;
+  border-radius: 20px !important;
+  width: 140px;
+  border: none !important;
+} 
+.signup:hover{
+  background-color:#228D57 !important; 
+}
+
 // Import Bootstrap and its default variables
 @import '~bootstrap/scss/bootstrap.scss';

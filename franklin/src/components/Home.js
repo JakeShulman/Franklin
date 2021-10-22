@@ -6,7 +6,7 @@ export default function Home() {
     return (
         <>
        <Navigation></Navigation>
-      <Section color = '#d3e8d1' height='50%'></Section> 
+      <Section color = '#d3e8d1' height='85%'></Section> 
         </>
     )
 }
