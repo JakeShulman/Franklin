@@ -22,6 +22,12 @@ $theme-colors: (
   color: #88bb65 !important;
 }
 
+.logout{
+  background-color: black !important;
+  border-radius: 20px !important;
+  width: 140px;
+  border: none !important;
+} 
 .signup{
   background-color: #88bb65 !important;
   border-radius: 20px !important;
@@ -32,5 +38,19 @@ $theme-colors: (
   background-color:#228D57 !important; 
 }
 
+.submitbutton{
+  color: 'white' !important;
+  font-size:'16px' !important;
+  font-weight:'bold' !important; 
+  border-radius:'5px' !important;
+  width:'150px' !important;
+  height:'50px' !important;
+  border: 'None' !important;
+  background-color: '#88bb65' !important;
+}
+
+.submitbutton:hover{
+  background-color:#228D57 !important; 
+}
 // Import Bootstrap and its default variables
 @import '~bootstrap/scss/bootstrap.scss';

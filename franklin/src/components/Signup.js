@@ -60,7 +60,7 @@ export default function Signup() {
         if(userErr){
             setError(userErr);
         } else{
-            history.push('/')
+            history.push('/dashboard')
             }
         setLoading(false)
     }

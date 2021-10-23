@@ -1,9 +1,10 @@
 import { Row, Col,  Container, Button } from 'react-bootstrap';
-import Image from '../imgs/frank_oval.gif'
+import Image from '../imgs/frank_oval_loop.gif'
 import Sig from '../imgs/sig.png'
 
 const Section = (props) => {
   return (
+    
           <>
           <Container fluid
         style={{
@@ -15,7 +16,7 @@ const Section = (props) => {
     <Row style = {{height: '80%', paddingTop:'5%'}}>
       <Col style = {{height: '100%'}} md={2}/>
         <Col  style = {{height: '100%'}} md={4}>  
-        <h1>Learn How to Write</h1>
+        <h1>Learn How to Write </h1>
         <h6>"I thought the writing excellent, and wished, if possible, to imitate it. 
           With this view I took some of the papers, and making short hints of the sentiment in each sentence, 
           laid them by a few days, and then, without looking at the book, tried to complete the papers again, 
@@ -34,6 +35,7 @@ const Section = (props) => {
           import, I had been lucky enough to improve the method or the language, and this encouraged me to think I might 
           possibly in time come to be a torable English writer, of which I was extremely ambitious."
         </h6>
+        
         <img className="d-block img-fluid mx-auto" style = {{height: '30%', justifyContent:'right'}}src={Sig}/>
         </Col>
         <Col md={1}/>
