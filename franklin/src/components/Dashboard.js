@@ -3,7 +3,7 @@ import { Card, Button, Alert, Form, Container } from "react-bootstrap"
 import { useAuth } from "../contexts/AuthContext"
 import { Link, useHistory } from "react-router-dom"
 import Navigation from "./Navigation"
-import { getDatabase, ref, set ,get, child  } from "firebase/database";
+import { ref, set ,get, child  } from "firebase/database";
 import {db} from "../firebase";
 
 export default function Dashboard() {
@@ -11,11 +11,11 @@ export default function Dashboard() {
   const { currentUser, logout } = useAuth()
   const history = useHistory()
   const [titles, setTitle] = useState([])
+  const [currentArticle, setCurrentArticle] = useState("")
 
   useEffect(() => {
     get(child(ref(db), `users/${currentUser.uid}/articles/`)).then((snapshot) => {
       const vals = snapshot.val();
-      console.log(vals)
       const titles = [];
       snapshot.forEach(function(childSnapshot) {
         var key = childSnapshot.key;
@@ -25,24 +25,7 @@ export default function Dashboard() {
       setTitle(titles);
     });
   }, []);
-  async function get_titles(){
-    console.log('here')
-    .then((snapshot) => {
-    if (snapshot.exists()) {
-      console.log(snapshot.val())
-      var titles = [];
-      snapshot.forEach((childSnapshot) => {
-        titles.push(childSnapshot.val().title);
-      });
-      return titles
 
-    } else {
-      console.log("No data available");
-    }
-  }).catch((error) => {
-    console.error(error);
-  });
-}
 
   function hashCode(s) {
   var hash = 0, i, chr;
@@ -66,11 +49,12 @@ export default function Dashboard() {
     <Navigation/>
     {/*Upload Article */}
     <Container style={{ minHeight: "100vh" ,backgroundColor: '#d3e8d1', minWidth:'100vw'}}>
-      <Card style={{backgroundColor: '#d3e8d1', border: 'none'}}>
+     <Card style={{backgroundColor: '#d3e8d1', border: 'none'}}>
         <Card.Body>
         <br></br>
           <h2 className="text-center mb-4">Upload a New Article</h2>
           <form onSubmit={(e) => {
+            console.log(e.target.selectarticle.value)
             e.preventDefault()
             //create article object
             const article = {
@@ -78,6 +62,16 @@ export default function Dashboard() {
               content: e.target.article.value,
             }
             writeUserArticle(currentUser, article)
+            if(article.content){
+              setCurrentArticle(article.content)
+            } else if(e.target.selectarticle.value){
+              //grab the contnet that matches the title from the firebase database
+              get(child(ref(db), `users/${currentUser.uid}/articles/${hashCode(e.target.selectarticle.value)}`)).then((snapshot) => {
+                const vals = snapshot.val();
+                setCurrentArticle(vals.content)
+              });
+
+            }
           }}>
             <div className="form-group">
               <input type="text" className="form-control" id="title" placeholder="Title" />
@@ -89,16 +83,15 @@ export default function Dashboard() {
             <div className="form-group">
               <br/>
             <h2 className="text-center mb-4">Or continue where you left off</h2>
-              <Form.Select className="form-control">
+              <Form.Select className="form-control" id='selectarticle'>
                 <option>Select an Article</option>
-                {titles ? titles.map((title, index) => <option>{title}</option>): ''}
-
+                {titles ? titles.map((title, index) => <option key={index}>{title}</option>): ''}
               </Form.Select> 
             </div>
             <div className="form-group">
               <div className="text-center">
                 <br/>
-              <Button type="submit" className="signup">
+              <Button type="submit" className="submitbutton">
                 <span className="text-white"> <b>Submit</b></span>
                 </Button>
               </div>
@@ -107,20 +100,14 @@ export default function Dashboard() {
         </Card.Body>
         </Card>
       
-          <div className="row">
+         {currentArticle && <div className="row">
             {/*Article */}
             <div className="col-md-6">
             <h2 className="text-center mb-4">Article</h2>
             <Card>
                 <Card.Body>
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-                nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-                sunt in culpa qui officia deserunt mollit anim id est laborum.
+                {currentArticle}
               </p>
               </Card.Body>
             </Card>
@@ -139,7 +126,7 @@ export default function Dashboard() {
             </div>
               </form>
             </div>
-          </div>
+          </div>}
           </Container>    
       </>
 
