@@ -56,7 +56,7 @@ export default function Login() {
         if(userErr){
             setError(userErr);
         } else{
-        history.push('/dashboard')
+        history.push('/upload')
         }
         setLoading(false)
     }

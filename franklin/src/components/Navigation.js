@@ -45,7 +45,7 @@ const Navigation = () => {
   <Navbar bg="light" fixed="top" variant="light">
     <Navbar.Brand style= {{paddingRight:'20px'}}href="/"><strong>Frankly Writing</strong></Navbar.Brand>
     <Nav className="me-auto">
-    <Nav.Link href="/dashboard">
+    <Nav.Link href="/upload">
       <div className = 'navbarlink' style={{color: 'black', fontSize:'18px', paddingRight:'20px'}}>Start Wrtiting</div>     
       </Nav.Link>
       <Nav.Link href="#/how-it-works">

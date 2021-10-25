@@ -8,7 +8,8 @@ import Login from './components/Login';
 import { AuthProvider } from './contexts/AuthContext';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom' 
 import PrivateRoute from './components/PrivateRoute';
-import Dashboard from './components/Dashboard';
+import Upload from './components/Upload';
+import WriteBoard from './components/WriteBoard';
 
 function App() {
   return (
@@ -17,9 +18,10 @@ function App() {
             <AuthProvider>
               <Switch>
                 <Route exact path path="/" component={Home} />
-                <PrivateRoute path='/dashboard' component={Dashboard}/>
+                <PrivateRoute path='/upload' component={Upload}/>
                 <Route path="/signup" component={Signup}/>
                 <Route path="/login" component={Login}/>
+                <Route path="/write" component={WriteBoard}/>
               </Switch>
             </AuthProvider>
             </Router>

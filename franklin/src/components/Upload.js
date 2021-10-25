@@ -6,14 +6,15 @@ import Navigation from "./Navigation"
 import { ref, set ,get, child  } from "firebase/database";
 import {db} from "../firebase";
 
-export default function Dashboard() {
+export default function Upload() {
   const [error, setError] = useState("")
   const { currentUser, logout } = useAuth()
   const history = useHistory()
   const [titles, setTitle] = useState([])
-  const [currentArticle, setCurrentArticle] = useState("")
+  const [currentArticle, setCurrentArticle] = useState({})
+  const [currentContent, setCurrentContent] = useState("")
 
-  useEffect(() => {
+  function get_titles() {
     get(child(ref(db), `users/${currentUser.uid}/articles/`)).then((snapshot) => {
       const vals = snapshot.val();
       const titles = [];
@@ -24,8 +25,47 @@ export default function Dashboard() {
       });
       setTitle(titles);
     });
+  }
+
+  function get_sentences(content){
+    //split the article into sentences by punctuation
+    var sentences = content.split(/[.!?]/);
+    //strip the white space from the sentences
+    sentences = sentences.map(function(sentence){
+      return sentence.trim();
+    });
+    //remove empty strings
+    sentences = sentences.filter(function(n){ return n !== "" });
+    return sentences;
+  }
+  useEffect(() => {
+    get_titles();
   }, []);
 
+ //make async function to read from firebase database
+  async function read_article(title){
+    var article = await get(child(ref(db), `users/${currentUser.uid}/articles/${hashCode(title)}`));
+    var content = article.val();
+    return content;
+  }
+
+  async function get_current_article(form_data){
+    if(form_data.content){
+      var sentences = get_sentences(form_data.content);
+      article = {
+        title: form_data.title.value,
+        content: form_data.article.value,
+        sentences: sentences,
+        notes: Array(sentences.length).fill("")
+      }
+      writeUserArticle(currentUser, article)
+      return article;
+    }
+    else if(form_data.selectarticle.value){
+      var article = await read_article(form_data.selectarticle.value);
+      return article;
+    }
+  }
 
   function hashCode(s) {
   var hash = 0, i, chr;
@@ -41,6 +81,7 @@ export default function Dashboard() {
   function writeUserArticle(currentUser, article){
     //hash the article title to get a unique key
      const key = hashCode(article.title);
+     console.log(currentUser.uid,key);
     set(ref(db, 'users/'+currentUser.uid+'/articles/'+key), article)
   }
 
@@ -54,24 +95,16 @@ export default function Dashboard() {
         <br></br>
           <h2 className="text-center mb-4">Upload a New Article</h2>
           <form onSubmit={(e) => {
-            console.log(e.target.selectarticle.value)
             e.preventDefault()
-            //create article object
-            const article = {
-              title: e.target.title.value,
-              content: e.target.article.value,
-            }
-            writeUserArticle(currentUser, article)
-            if(article.content){
-              setCurrentArticle(article.content)
-            } else if(e.target.selectarticle.value){
-              //grab the contnet that matches the title from the firebase database
-              get(child(ref(db), `users/${currentUser.uid}/articles/${hashCode(e.target.selectarticle.value)}`)).then((snapshot) => {
-                const vals = snapshot.val();
-                setCurrentArticle(vals.content)
-              });
+            get_titles();
+            get_current_article(e.target).then(response =>{
+              history.push({
+                pathname: '/write',
+                state: { article: response }
+                })
+            })
+            
 
-            }
           }}>
             <div className="form-group">
               <input type="text" className="form-control" id="title" placeholder="Title" />
@@ -82,7 +115,7 @@ export default function Dashboard() {
             </div>
             <div className="form-group">
               <br/>
-            <h2 className="text-center mb-4">Or continue where you left off</h2>
+            <h2 className="text-center mb-4">Or Continue Where You Left Off</h2>
               <Form.Select className="form-control" id='selectarticle'>
                 <option>Select an Article</option>
                 {titles ? titles.map((title, index) => <option key={index}>{title}</option>): ''}
@@ -99,34 +132,6 @@ export default function Dashboard() {
           </form>
         </Card.Body>
         </Card>
-      
-         {currentArticle && <div className="row">
-            {/*Article */}
-            <div className="col-md-6">
-            <h2 className="text-center mb-4">Article</h2>
-            <Card>
-                <Card.Body>
-              <p>
-                {currentArticle}
-              </p>
-              </Card.Body>
-            </Card>
-            </div>
-            {/*Notes*/}
-            <div className="col-md-6">
-            <h2 className="text-center mb-4">Notes</h2>
-                <form>
-            <div className="form-group">
-              <textarea
-                  rows="5"
-                className="form-control"
-                id="content" 
-                placeholder="Enter content"
-              />
-            </div>
-              </form>
-            </div>
-          </div>}
           </Container>    
       </>
 
