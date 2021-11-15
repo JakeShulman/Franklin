@@ -16,7 +16,6 @@ export default function Upload() {
 
   function get_titles() {
     get(child(ref(db), `users/${currentUser.uid}/articles/`)).then((snapshot) => {
-      const vals = snapshot.val();
       const titles = [];
       snapshot.forEach(function(childSnapshot) {
         var key = childSnapshot.key;
@@ -49,25 +48,29 @@ export default function Upload() {
     return content;
   }
 
+
+
   async function get_current_article(form_data){
-    if(form_data.content){
-      var sentences = get_sentences(form_data.content);
+    console.log(form_data.target.article.value);
+    var data = form_data.target;
+    if(data.article){
+      var sentences = get_sentences(data.article.value);
       article = {
-        title: form_data.title.value,
-        content: form_data.article.value,
+        title: data.title.value,
+        content: data.article.value,
         sentences: sentences,
         notes: Array(sentences.length).fill("")
       }
-      writeUserArticle(currentUser, article)
+      await writeUserArticle(currentUser, article)
       return article;
     }
-    else if(form_data.selectarticle.value){
-      var article = await read_article(form_data.selectarticle.value);
+    else if(data.selectarticle.value){
+      var article = await read_article(data.selectarticle.value);
       return article;
     }
   }
 
-  function hashCode(s) {
+function hashCode(s) {
   var hash = 0, i, chr;
   if (s.length === 0) return hash;
   for (i = 0; i < s.length; i++) {
@@ -95,9 +98,10 @@ export default function Upload() {
         <br></br>
           <h2 className="text-center mb-4">Upload a New Article</h2>
           <form onSubmit={(e) => {
+            console.log(e.target)
             e.preventDefault()
             get_titles();
-            get_current_article(e.target).then(response =>{
+            get_current_article(e).then(response =>{
               history.push({
                 pathname: '/write',
                 state: { article: response }
